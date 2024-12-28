@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body style="background-color: white;">
+    <header class="text-center py-4 bg-dark text-white">
+        <h1>Transaction Page</h1>
+    </header>
+    <section class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h2 class="text-center mb-4">Transaction</h2>
+                <form id="Form" class="p-4 border rounded shadow">
+                    <div class="form-group">
+                        <label for="senderAccount">Sender Account</label>
+                        <input type="text" class="form-control" id="senderAccount" placeholder="Enter your number" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="receiverAccount">Receiver Account</label>
+                        <input type="text" class="form-control" id="receiverAccount" placeholder="Enter your number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" class="form-control" id="amount" placeholder="Enter your amount" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-dark text-white py-3 text-center">
+        <p>&copy; 2024 ABC Bank. All rights reserved.</p>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Get the account number from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const accountNo = urlParams.get('accountNo');
+            if (accountNo) {
+                document.getElementById('senderAccount').value = accountNo;
+            }
+        });
+        document.getElementById('transaction-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const senderAccount = document.getElementById('senderAccount').value;
+            const receiverAccount = document.getElementById('receiverAccount').value;
+            const amount = document.getElementById('amount').value;
+
+            // Post the transaction data to the backend
+            fetch('/transactions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ senderAccount, receiverAccount, amount })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Transaction successful!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Transaction failed!');
+            });
+        });
+    </script>
+</body>
+</html>
